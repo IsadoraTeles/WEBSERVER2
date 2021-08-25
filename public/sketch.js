@@ -51,7 +51,7 @@ function draw()
 
   socket.on('mobileData',  (msg) => 
   {
-    fill(255,0,0);
+    fill(255,255,0);
     ellipse(msg.posX, msg.posY, 30, 30);
   });
 
