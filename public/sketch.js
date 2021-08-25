@@ -1,37 +1,49 @@
 var socket = io();
 
-// Position Variables
-let x = 0;
-let y = 0;
-
-// Speed - Velocity
-let vx = 0;
-let vy = 0;
-
-// Acceleration
-let ax = 0;
-let ay = 0;
-
-let vMultiplier = 0.007;
-let bMultiplier = 0.6;
-
+var x, y, z;
+var xpos, ypos;
 
 function setup() 
 {
-  createCanvas(displayWidth, displayHeight);
-  fill(0);
+  // set canvas size
+  createCanvas(400, 400);
+
+  // default values
+  xpos = 200;
+  ypos = 200;
+  x = 0;
+  y = 0;
 }
 
 function draw() 
 {
+  // set background color to white
   background(255);
-  ballMove();
-  fill(255, 255, 0);
-  ellipse(x, y, 30, 30);
+
+  // add/subract xpos and ypos
+  xpos = xpos + x;
+  ypos = ypos - y;
+
+  // wrap ellipse if over bounds
+  if(xpos > 400) { xpos = 0; }
+  if(xpos < 0) { xpos = 400; }
+  if(ypos > 400) { ypos = 0; }
+  if(ypos < 0) { ypos = 400; }
+
+  // draw ellipse
+  fill(255, 0, 0);
+  ellipse(xpos, ypos, 25, 25);
+
+  // display variables
+  fill(0);
+  noStroke();
+  text("x: " + x, 25, 25);
+  text("y: " + y, 25, 50);
+  text("z: " + z, 25, 75);
   var data = 
   {
-    posX: x,
-    posY: y
+    posX: xpos,
+    posY: ypos
   };
 
   // Send that object to the socket
@@ -40,36 +52,17 @@ function draw()
   socket.on('mobileData',  (msg) => 
   {
     fill(255,0,0);
-    ellipse(x, y, 30, 30);
+    ellipse(msg.posX, msg.posY, 30, 30);
   });
 
 }
 
-function ballMove() {
-  ax = accelerationX;
-  ay = accelerationY;
-
-  vx = vx + ay;
-  vy = vy + ax;
-  y = y + vy * vMultiplier;
-  x = x + vx * vMultiplier;
-
-  // Bounce when touch the edge of the canvas
-  if (x < 0) {
-    x = 0;
-    vx = -vx * bMultiplier;
-  }
-  if (y < 0) {
-    y = 0;
-    vy = -vy * bMultiplier;
-  }
-  if (x > width - 20) {
-    x = width - 20;
-    vx = -vx * bMultiplier;
-  }
-  if (y > height - 20) {
-    y = height - 20;
-    vy = -vy * bMultiplier;
-  }
-}
+// accelerometer Data
+window.addEventListener('devicemotion', function(e) 
+{
+  // get accelerometer values
+  x = parseInt(e.accelerationIncludingGravity.x);
+  y = parseInt(e.accelerationIncludingGravity.y);
+  z = parseInt(e.accelerationIncludingGravity.z); 
+});
 
