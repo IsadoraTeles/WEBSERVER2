@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const path = require('path');
 const http = require('http');
 const server = http.createServer(app);
 const { Server } = require("socket.io");
@@ -12,6 +13,7 @@ server.listen(PORT, () =>
 });
 
 // Routing
+app.use(express.static(path.join(__dirname, 'public')));
 
 io.on('connection', (socket) => 
 {
