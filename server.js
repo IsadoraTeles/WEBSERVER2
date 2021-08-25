@@ -1,16 +1,19 @@
 const express = require('express');
 const app = express();
-const path = require('path');
-const server = require('http').createServer(app);
-const io = require('socket.io')(server);
-const port = process.env.PORT || 3000;
+const http = require('http');
+const server = http.createServer(app);
+const { Server } = require("socket.io");
+const io = new Server(server);
+const PORT = process.env.PORT || 3000;
 
-server.listen(port, () => {
-    console.log('Server listening at port %d', port);
+server.listen(PORT, () => 
+{
+    console.log(`Our app is running on port ${ PORT }`);
 });
 
-// Routing
-app.use(express.static(path.join(__dirname, 'public')));
+app.get('/', (req, res) => {
+  res.send('<h1>Hello world</h1>');
+});
 
 io.on('connection', (socket) => 
 {
@@ -28,6 +31,3 @@ io.on('connection', (socket) =>
     });
 });
   
-server.listen(3000, () => {
-  console.log('listening on *:3000');
-});
