@@ -11,9 +11,7 @@ server.listen(PORT, () =>
     console.log(`Our app is running on port ${ PORT }`);
 });
 
-app.get('/', (req, res) => {
-  res.send('<h1>Hello world</h1>');
-});
+// Routing
 
 io.on('connection', (socket) => 
 {
