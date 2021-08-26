@@ -29,6 +29,18 @@ function setup()
 function draw() 
 {
 
+  // get accelerometer values
+  AccX = accelerationX;
+  AccY = accelerationY;
+  AccZ = accelerationZ; 
+  
+// // add/subract xpos and ypos
+  xpos = xpos + AccX;
+  ypos = ypos - AccY;
+  emmitAccelerometer(xpos, ypos, zpos);
+	console.log('sendingAccelerometer:', AccX +',', AccY + ',', AccZ);
+	//fill(255, 255, 255); // WHITE drawing local Acc ellipse
+	displayDotAccelerometer(xpos, ypos, zpos);
 }
 
 function displayDotAccelerometer(xx, yy, zz)
@@ -40,6 +52,7 @@ function displayDotAccelerometer(xx, yy, zz)
 	if(yy < 0) { yy = windowHeight - ((-1 * yy) % windowHeight); }
 	
 	// draw ellipse
+  fill(255, 255, 255); // WHITE drawing local Acc ellipse
 	ellipse(xx, yy, 40);
 }
 
@@ -47,24 +60,6 @@ function displayDotMouse(x, y)
 {
 	ellipse(x, y, 15);
 }
-
-// accelerometer Data
-window.addEventListener('devicemotion', function(e) 
-{
-  	// get accelerometer values
-  	AccX = parseInt(e.accelerationIncludingGravity.x);
-  	AccY = parseInt(e.accelerationIncludingGravity.y);
-	  AccZ = parseInt(e.accelerationIncludingGravity.z); 
-	  
-	// // add/subract xpos and ypos
-	xpos = xpos + AccX;
-	ypos = ypos - AccY;
-
-	emmitAccelerometer(xpos, ypos, zpos);
-	console.log('sendingAccelerometer:', AccX +',', AccY + ',', AccZ);
-	fill(255, 255, 255); // WHITE drawing local Acc ellipse
-	displayDotAccelerometer(xpos, ypos, zpos);
-});
 
 function emmitAccelerometer (INx, INy, INz)
 {
