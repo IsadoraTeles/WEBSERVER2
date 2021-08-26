@@ -38,7 +38,7 @@ function draw()
 }
 
 function AccBallMove() {
-  myAccX = acelerationX;
+  myAccX = accelerationX;
   myAccY = accelerationY;
 
   myVelX = myVelX + myAccX;
