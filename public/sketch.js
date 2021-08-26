@@ -30,10 +30,7 @@ function setup()
 
 function draw() 
 {
-  AccBallMove();
-
-  fill(255, 0, 0); // WHITE drawing local Acc ellipse
-	ellipse(myPosX, myPosY, 40);
+  
 }
 
 // accelerometer Data
@@ -43,36 +40,15 @@ window.addEventListener('devicemotion', function(e)
   myAccX = parseInt(e.accelerationIncludingGravity.x);
   myAccY = parseInt(e.accelerationIncludingGravity.y);
   myAccZ = parseInt(e.accelerationIncludingGravity.z); 
+
+  myPosX = myPosX + myAccX;
+	myPosY = myPosY - myAccY;
+
+  emmitAccelerometer(myPosX, myPosY, 0);
+  fill(255, 0, 0); // red drawing local Acc ellipse
+	ellipse(myPosX, myPosY, 40);
+
 });
-
-function AccBallMove() {
-
-  myVelX = myVelX + myAccY;
-  myVelY = myVelY + myAccX;
-
-  myPosY = myPosY + myVelY * vMultiplier;
-  myPosX = myPosX + myVelX * vMultiplier;
-
-  // Bounce when touch the edge of the canvas
-  if (myPosX < 0) {
-    myPosX = 0;
-    myVelX = -myVelX * bMultiplier;
-  }
-  if (myPosY < 0) {
-    myPosY = 0;
-    myVelY = -myVelY * bMultiplier;
-  }
-  if (myPosX > width - 20) {
-    myPosX = width - 20;
-    myVelX = -myVelX * bMultiplier;
-  }
-  if (myPosY > height - 20) {
-    myPosY = height - 20;
-    myVelY = -myVelY * bMultiplier;
-  }
-
-  emmitAccelerometer(myPosX, myPosY, 0);	
-}
 
 function emmitAccelerometer (INx, INy, INz)
 {
