@@ -31,13 +31,37 @@ function setup()
 function draw() 
 {
   // get accelerometer values
-  // myAccX = accelerationX;
-  // myAccY = accelerationY;
-	// myAccZ = accelerationZ; 
+  myAccX = accelerationX;
+  myAccY = accelerationY;
+	myAccZ = accelerationZ; 
 	  
-	// // // add/subract xpos and ypos
-	// myPosX = myPosX + myAccX;
-	// myPosY = myPosY - myAccY;
+	// // add/subract xpos and ypos
+	myPosX = myPosX + myAccX;
+	myPosY = myPosY - myAccY;
+  
+	// wrap ellipse if over bounds
+	if(myPosX > windowWidth) { myPosX = 0; }
+	if(myPosX < 0) { myPosX = windowWidth; }
+	if(myPosY > windowHeight) { myPosY = 0; }
+	if(myPosY < 0) { myPosY = windowHeight; }
+
+	emmitAccelerometer(myPosX, myPosY, myAccZ);
+	//console.log('sendingAccelerometer:', myPosX +',', myPosY + ',', myAccZ);
+	fill(255, 0, 0); // red drawing local Acc ellipse
+  ellipse(myPosX, myPosY, 40);
+}
+
+// accelerometer Data
+window.addEventListener('devicemotion', function(e) 
+{
+  // get accelerometer values
+  myAccX = parseInt(e.accelerationIncludingGravity.x);
+  myAccY = parseInt(e.accelerationIncludingGravity.y);
+	myAccZ = parseInt(e.accelerationIncludingGravity.z); 
+	  
+	// // add/subract xpos and ypos
+	myPosX = myPosX + myAccX;
+	myPosY = myPosY - myAccY;
   
 	// // wrap ellipse if over bounds
 	// if(myPosX > windowWidth) { myPosX = 0; }
@@ -45,64 +69,11 @@ function draw()
 	// if(myPosY > windowHeight) { myPosY = 0; }
 	// if(myPosY < 0) { myPosY = windowHeight; }
 
-	// emmitAccelerometer(myPosX, myPosY, myAccZ);
-	// //console.log('sendingAccelerometer:', myPosX +',', myPosY + ',', myAccZ);
-	// fill(255, 0, 0); // red drawing local Acc ellipse
-  // ellipse(myPosX, myPosY, 40);
-}
-
-
-DeviceMotionEvent.requestPermission()
-.then(response => {
-  if (response == 'granted') {
-    window.addEventListener('devicemotion', (e) => 
-    {
-      myAccX = parseInt(e.accelerationIncludingGravity.x);
-      myAccY = parseInt(e.accelerationIncludingGravity.y);
-      myAccZ = parseInt(e.accelerationIncludingGravity.z); 
-      
-      // // add/subract xpos and ypos
-      myPosX = myPosX + myAccX;
-      myPosY = myPosY - myAccY;
-      
-      // // wrap ellipse if over bounds
-      // if(myPosX > windowWidth) { myPosX = 0; }
-      // if(myPosX < 0) { myPosX = windowWidth; }
-      // if(myPosY > windowHeight) { myPosY = 0; }
-      // if(myPosY < 0) { myPosY = windowHeight; }
-
-      emmitAccelerometer(myPosX, myPosY, myAccZ);
-      console.log('sendingAccelerometer:', myPosX +',', myPosY + ',', myAccZ);
-      fill(255, 0, 0); // red drawing local Acc ellipse
-      ellipse(myPosX, myPosY, 40);
-    })
-  }
-})
-.catch(console.error)
-
-// accelerometer Data
-// window.addEventListener('devicemotion', function(e) 
-// {
-//   // get accelerometer values
-//   myAccX = parseInt(e.accelerationIncludingGravity.x);
-//   myAccY = parseInt(e.accelerationIncludingGravity.y);
-// 	myAccZ = parseInt(e.accelerationIncludingGravity.z); 
-	  
-// 	// // add/subract xpos and ypos
-// 	myPosX = myPosX + myAccX;
-// 	myPosY = myPosY - myAccY;
-  
-// 	// // wrap ellipse if over bounds
-// 	// if(myPosX > windowWidth) { myPosX = 0; }
-// 	// if(myPosX < 0) { myPosX = windowWidth; }
-// 	// if(myPosY > windowHeight) { myPosY = 0; }
-// 	// if(myPosY < 0) { myPosY = windowHeight; }
-
-// 	emmitAccelerometer(myPosX, myPosY, myAccZ);
-// 	console.log('sendingAccelerometer:', myPosX +',', myPosY + ',', myAccZ);
-// 	fill(255, 0, 0); // red drawing local Acc ellipse
-//   ellipse(myPosX, myPosY, 40);
-// });
+	emmitAccelerometer(myPosX, myPosY, myAccZ);
+	console.log('sendingAccelerometer:', myPosX +',', myPosY + ',', myAccZ);
+	fill(255, 0, 0); // red drawing local Acc ellipse
+  ellipse(myPosX, myPosY, 40);
+});
 
 function emmitAccelerometer (INx, INy, INz)
 {
