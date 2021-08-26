@@ -1,5 +1,5 @@
 var socket = io();
-
+var isMobile = navigator.userAgent.match(/(iPhone|iPod|iPad|Android|BlackBerry)/) || false;
 var renderer;
 
 // Position Variables
@@ -30,16 +30,20 @@ function setup()
 
 function draw() 
 {
-  
+  if (isMobile)
+  {
+    Movement();
+  }
 }
 
 // accelerometer Data
-window.addEventListener('devicemotion', function(e) 
+function Movement ()
 {
+  renderer.canvas.style.display = 'block';
   // get accelerometer values
-  myAccX = parseInt(e.accelerationIncludingGravity.x);
-  myAccY = parseInt(e.accelerationIncludingGravity.y);
-  myAccZ = parseInt(e.accelerationIncludingGravity.z); 
+  myAccX = accelerationX;
+  myAccY = accelerationY;
+  myAccZ = accelerationZ; 
 
   myPosX = myPosX + myAccX;
 	myPosY = myPosY - myAccY;
@@ -47,8 +51,7 @@ window.addEventListener('devicemotion', function(e)
   emmitAccelerometer(myPosX, myPosY, 0);
   fill(255, 0, 0); // red drawing local Acc ellipse
 	ellipse(myPosX, myPosY, 40);
-
-});
+};
 
 function emmitAccelerometer (INx, INy, INz)
 {
