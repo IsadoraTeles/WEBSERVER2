@@ -40,7 +40,7 @@ function displayDotAccelerometer(xx, yy, zz)
 	if(yy < 0) { yy = windowHeight - ((-1 * yy) % windowHeight); }
 	
 	// draw ellipse
-	ellipse(xx, yy, 25);
+	ellipse(xx, yy, 40);
 }
 
 function displayDotMouse(x, y)
@@ -54,21 +54,15 @@ window.addEventListener('devicemotion', function(e)
   	// get accelerometer values
   	AccX = parseInt(e.accelerationIncludingGravity.x);
   	AccY = parseInt(e.accelerationIncludingGravity.y);
-	AccZ = parseInt(e.accelerationIncludingGravity.z); 
+	  AccZ = parseInt(e.accelerationIncludingGravity.z); 
 	  
 	// // add/subract xpos and ypos
 	xpos = xpos + AccX;
 	ypos = ypos - AccY;
-  
-	// // // wrap ellipse if over bounds
-	// if(xpos > windowWidth) { xpos = 0; }
-	// if(xpos < 0) { xpos = windowWidth; }
-	// if(ypos > windowHeight) { ypos = 0; }
-	// if(ypos < 0) { ypos = windowHeight; }
 
 	emmitAccelerometer(xpos, ypos, zpos);
-	//console.log('sendingAccelerometer:', AccX +',', AccY + ',', AccZ);
-	fill(0, 0, random(150, 255)); // WHITE drawing local Acc ellipse
+	console.log('sendingAccelerometer:', AccX +',', AccY + ',', AccZ);
+	fill(255, 255, 255); // WHITE drawing local Acc ellipse
 	displayDotAccelerometer(xpos, ypos, zpos);
 });
 
@@ -95,7 +89,7 @@ function mouseDragged()
 
 	emmitMouse(mouseX, mouseY);
 	console.log('sendingMouse:', mouseX +',', mouseY);
-	fill(255, 255, 0); // green drawing local Mouse ellipse20
+	fill(255, 255, 0); // yellow drawing local Mouse ellipse20
 	displayDotMouse(mouseX, mouseY);
 }
 
@@ -113,13 +107,13 @@ function emmitMouse(INx, INy)
 function ReceivingNewDrawingAcc(data)
 {
 	console.log('receivingAcc :', data.x +', ', data.y + ', ', data.z);
-	fill(random(180, 255), 0, 0); // BLUE drawing received Acc ellipse
+	fill(255, 0, 0); // red drawing received Acc ellipse
 	displayDotAccelerometer(data.x, data.y, data.z);
 }
 
 function ReceivingNewDrawingMouse(data)
 {
 	console.log('receivingMouse :', data.x +', ', data.y);
-	fill(0, 255, 255); // YELLOW drawing received Mouse ellipse
+	fill(0, 255, 255); // cyan drawing received Mouse ellipse
 	displayDotMouse(data.x, data.y);
 }
