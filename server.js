@@ -23,13 +23,13 @@ io.on('connection', (socket) =>
 	socket.on('mouse', mouseMsg);
 	function accelerometerMsg(data) 
 	{
-		socket.broadcast.emit('accelerometer', data)
-		console.log(data)
+		socket.emit('accelerometer', data);
+		console.log(data);
 	}
 	function mouseMsg(data) 
 	{
-		socket.broadcast.emit('mouse', data)
-		console.log(data)
+		socket.broadcast.emit('mouse', data);
+		console.log(data);
 	}
   socket.on('disconnect', () => console.log('Client disconnected'));
 });
