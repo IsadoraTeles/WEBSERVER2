@@ -13,6 +13,7 @@ let myVelY = 0;
 // Acceleration
 let myAccX = 0;
 let myAccY = 0;
+let myAccZ = 0;
 
 let vMultiplier = 0.07;
 let bMultiplier = 0.6;
@@ -33,13 +34,18 @@ function draw()
 
   fill(255, 0, 0); // WHITE drawing local Acc ellipse
 	ellipse(myPosX, myPosY, 40);
-
-  emmitAccelerometer(myPosX, myPosY, 0);	
 }
 
+// accelerometer Data
+window.addEventListener('devicemotion', function(e) 
+{
+  // get accelerometer values
+  myAccX = parseInt(e.accelerationIncludingGravity.x);
+  myAccY = parseInt(e.accelerationIncludingGravity.y);
+  myAccZ = parseInt(e.accelerationIncludingGravity.z); 
+});
+
 function AccBallMove() {
-  myAccX = accelerationX;
-  myAccY = accelerationY;
 
   myVelX = myVelX + myAccY;
   myVelY = myVelY + myAccX;
@@ -64,6 +70,8 @@ function AccBallMove() {
     myPosY = height - 20;
     myVelY = -myVelY * bMultiplier;
   }
+
+  emmitAccelerometer(myPosX, myPosY, 0);	
 }
 
 function emmitAccelerometer (INx, INy, INz)
