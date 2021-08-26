@@ -31,18 +31,31 @@ function setup()
 function draw() 
 {
   
-    myAccX = accelerationX;
-    myAccY = accelerationY;
-    myAccZ = accelerationZ; 
-
-    myPosX += myAccX * 0.05;
-    myPosY += myAccY * 0.05;
-
-    emmitAccelerometer(myPosX, myPosY, 0);
-    fill(255, 0, 0); // red drawing local Acc ellipse
-    ellipse(myPosX, myPosY, 40);
-  
 }
+
+// accelerometer Data
+window.addEventListener('devicemotion', function(e) 
+{
+  // get accelerometer values
+  myAccX = parseInt(e.accelerationIncludingGravity.x);
+  myAccY = parseInt(e.accelerationIncludingGravity.y);
+	myAccZ = parseInt(e.accelerationIncludingGravity.z); 
+	  
+	// // add/subract xpos and ypos
+	myPosX = myPosX + myAccX;
+	myPosY = myPosY - myAccY;
+  
+	// // wrap ellipse if over bounds
+	if(myPosX > windowWidth) { myPosX = 0; }
+	if(myPosX < 0) { myPosX = windowWidth; }
+	if(myPosY > windowHeight) { myPosY = 0; }
+	if(myPosY < 0) { myPosY = windowHeight; }
+
+	emmitAccelerometer(myPosX, myPosY, myAccZ);
+	console.log('sendingAccelerometer:', myPosX +',', myPosY + ',', myAccZ);
+	fill(255, 0, 0); // red drawing local Acc ellipse
+  ellipse(myPosX, myPosY, 40);
+});
 
 function emmitAccelerometer (INx, INy, INz)
 {
@@ -55,7 +68,7 @@ function emmitAccelerometer (INx, INy, INz)
 	}
 
 	socket.emit('accelerometer', data);
-  console.log('sendingAccelerometer:', INx +',', INy + ',', 0);
+  console.log('sendingAccelerometer:', INx +',', INy + ',', INz);
 }
 
 function mousePressed()
