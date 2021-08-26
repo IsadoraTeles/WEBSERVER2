@@ -30,28 +30,19 @@ function setup()
 
 function draw() 
 {
-  if (isMobile)
-  {
-    Movement();
-  }
+  
+    myAccX = accelerationX;
+    myAccY = accelerationY;
+    myAccZ = accelerationZ; 
+
+    myPosX += myAccX * 0.05;
+    myPosY += myAccY * 0.05;
+
+    emmitAccelerometer(myPosX, myPosY, 0);
+    fill(255, 0, 0); // red drawing local Acc ellipse
+    ellipse(myPosX, myPosY, 40);
+  
 }
-
-// accelerometer Data
-function Movement ()
-{
-  renderer.canvas.style.display = 'block';
-  // get accelerometer values
-  myAccX = accelerationX;
-  myAccY = accelerationY;
-  myAccZ = accelerationZ; 
-
-  myPosX += myAccX * 0.05;
-	myPosY += myAccY * 0.05;
-
-  emmitAccelerometer(myPosX, myPosY, 0);
-  fill(255, 0, 0); // red drawing local Acc ellipse
-	ellipse(myPosX, myPosY, 40);
-};
 
 function emmitAccelerometer (INx, INy, INz)
 {
