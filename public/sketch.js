@@ -49,8 +49,7 @@ function displayDotMouse(x, y)
 }
 
 // accelerometer Data
-window.addEventListener('devicemotion', throttle(onMovement, 10), false); 
-function onMovement(e)
+window.addEventListener('devicemotion', function(e) 
 {
   	// get accelerometer values
   	AccX = parseInt(e.accelerationIncludingGravity.x);
@@ -60,12 +59,18 @@ function onMovement(e)
 	// // add/subract xpos and ypos
 	xpos = xpos + AccX;
 	ypos = ypos - AccY;
+  
+	// // // wrap ellipse if over bounds
+	// if(xpos > windowWidth) { xpos = 0; }
+	// if(xpos < 0) { xpos = windowWidth; }
+	// if(ypos > windowHeight) { ypos = 0; }
+	// if(ypos < 0) { ypos = windowHeight; }
 
 	emmitAccelerometer(xpos, ypos, zpos);
 	//console.log('sendingAccelerometer:', AccX +',', AccY + ',', AccZ);
 	fill(0, 0, random(150, 255)); // WHITE drawing local Acc ellipse
 	displayDotAccelerometer(xpos, ypos, zpos);
-}
+});
 
 function emmitAccelerometer (INx, INy, INz)
 {
@@ -117,17 +122,4 @@ function ReceivingNewDrawingMouse(data)
 	console.log('receivingMouse :', data.x +', ', data.y);
 	fill(0, 255, 255); // YELLOW drawing received Mouse ellipse
 	displayDotMouse(data.x, data.y);
-}
-
-// limit the number of events per second
-function throttle(callback, delay) {
-  var previousCall = new Date().getTime();
-  return function() {
-    var time = new Date().getTime();
-
-    if ((time - previousCall) >= delay) {
-      previousCall = time;
-      callback.apply(null, arguments);
-    }
-  };
 }
