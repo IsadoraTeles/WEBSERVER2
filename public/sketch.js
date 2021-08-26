@@ -5,6 +5,7 @@ var renderer;
 var AccX, AccY, AccZ;
 var xpos = 200;
 var ypos = 200;
+var zpos = 0;
 var acc = true;
 
 function setup() 
