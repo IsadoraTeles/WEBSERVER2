@@ -1,33 +1,37 @@
+
+// NODE SOCKET.IO
+
+'use strict';
+
 const express = require('express');
-const app = express();
+const socketIO = require('socket.io');
 const path = require('path');
-const http = require('http');
-const server = http.createServer(app);
-const { Server } = require("socket.io");
-const io = new Server(server);
+
 const PORT = process.env.PORT || 3000;
+const INDEX = path.join(__dirname, 'index.html');
 
-server.listen(PORT, () => 
-{
-    console.log(`Our app is running on port ${ PORT }`);
-});
+const server = express()
+  .use(express.static(__dirname + '/public'))
+  .listen(PORT, () => console.log(`Listening on ${ PORT }`));
 
-// Routing
-app.use(express.static(path.join(__dirname, 'public')));
+const io = socketIO(server);
 
 io.on('connection', (socket) => 
 {
-    console.log('a user connected');
-
-    socket.on('mobileData', (msg) => 
-    {
-        console.log('message: ' + msg);
-        socket.broadcast.emit('mobileData', msg);
-    });
-
-    socket.on('disconnect', () => 
-    {
-        console.log('user disconnected');
-    });
+	console.log('new connection from:',	socket.id);
+	socket.on('accelerometer', accelerometerMsg);
+	socket.on('mouse', mouseMsg);
+	function accelerometerMsg(data) 
+	{
+		socket.broadcast.emit('accelerometer', data)
+		console.log(data)
+	}
+	function mouseMsg(data) 
+	{
+		socket.broadcast.emit('mouse', data)
+		console.log(data)
+	}
+  socket.on('disconnect', () => console.log('Client disconnected'));
 });
-  
+
+setInterval(() => io.emit('time', new Date().toTimeString()), 1000);

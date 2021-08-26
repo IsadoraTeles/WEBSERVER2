@@ -1,0 +1,9 @@
+html, body {
+	margin: 0;
+	padding: 0;
+    border: none;
+    background: rgb(2, 0, 5);
+
+    overflow: hidden; 
+
+}
