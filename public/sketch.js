@@ -58,7 +58,8 @@ function setup()
 
 function draw() 
 {
-  // get accelerometer values
+  if (hasSensorPermission){
+    // get accelerometer values
   myAccX = accelerationX;
   myAccY = accelerationY;
 	myAccZ = accelerationZ; 
@@ -77,6 +78,8 @@ function draw()
 	//console.log('sendingAccelerometer:', myPosX +',', myPosY + ',', myAccZ);
 	fill(255, 0, 0); // red drawing local Acc ellipse
   ellipse(myPosX, myPosY, 40);
+  }
+  
 }
 
 // // accelerometer Data
@@ -147,7 +150,7 @@ function emmitMouse(INx, INy)
 function ReceivingNewDrawingAcc(data)
 {
 	console.log('receivingAcc :', data.x +', ', data.y + ', ', data.z);
-	fill(255, 0, 0); // red drawing received Acc ellipse
+	fill(0, 0, 255); // blue drawing received Acc ellipse
 	ellipse(data.x, data.y, 40);
 }
 

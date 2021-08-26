@@ -23,7 +23,7 @@ io.on('connection', (socket) =>
 	socket.on('mouse', mouseMsg);
 	function accelerometerMsg(data) 
 	{
-		socket.emit('accelerometer', data);
+		socket.broadcast.emit('accelerometer', data);
 		console.log(data);
 	}
 	function mouseMsg(data) 
