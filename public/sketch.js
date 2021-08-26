@@ -45,8 +45,8 @@ function Movement ()
   myAccY = accelerationY;
   myAccZ = accelerationZ; 
 
-  myPosX = myPosX + myAccX;
-	myPosY = myPosY - myAccY;
+  myPosX += myAccX * 0.05;
+	myPosY += myAccY * 0.05;
 
   emmitAccelerometer(myPosX, myPosY, 0);
   fill(255, 0, 0); // red drawing local Acc ellipse
