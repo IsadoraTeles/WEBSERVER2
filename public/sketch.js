@@ -14,7 +14,7 @@ let myVelY = 0;
 let myAccX = 0;
 let myAccY = 0;
 
-let vMultiplier = 0.007;
+let vMultiplier = 0.07;
 let bMultiplier = 0.6;
 
 function setup() 
@@ -41,8 +41,9 @@ function AccBallMove() {
   myAccX = accelerationX;
   myAccY = accelerationY;
 
-  myVelX = myVelX + myAccX;
-  myVelY = myVelY + myAccY;
+  myVelX = myVelX + myAccY;
+  myVelY = myVelY + myAccX;
+
   myPosY = myPosY + myVelY * vMultiplier;
   myPosX = myPosX + myVelX * vMultiplier;
 
