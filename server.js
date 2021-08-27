@@ -1,55 +1,51 @@
-
-'use strict';
-
-
-const path = require('path');
-
-const PORT = process.env.PORT || 3000;
-const INDEX = path.join(__dirname, 'index.html');
-
-var fs = require( 'fs' );
-var https = require('https');
-
-var app = require('express')();
-var server = https.createServer({ 
-    key: fs.readFileSync('key.pem'),
-    cert: fs.readFileSync('cert.pem') 
- },app);
-
-server.get((req, res) => res.sendFile(INDEX, { root: __dirname }));
-server.listen(PORT, () => console.log(`Listening on ${PORT}`));
-
-var io = require('socket.io').listen(server);
-
-////////////////////////////////////////
-// NODE SOCKET.IO
-
 // 'use strict';
 
-// var fs = require('fs');
-// var https = require('https');
-
 // const express = require('express');
-// var app = express();
+// const http = require('http');
+// var https = require('https');
+// var fs = require( 'fs' );
+// const path = require('path');
+// const { Server } = require("socket.io");
+
+// const PORT = process.env.PORT || 3000;
+// const INDEX = '/index.html';
 
 // const options = {
 //     key: fs.readFileSync('key.pem'),
 //     cert: fs.readFileSync('cert.pem')
 //   };
 
-// const PORT = process.env.PORT || 3000;
-// const INDEX = '/index.html';
+// const app = express();
+// const server = https.createServer(options, app);
 
-// var server = https.createServer(options, app);
-// var io = require('socket.io')(server);
+// app.use(express.static(__dirname + '/public'));
 
-// app.get('/', function(req, res) {
-//     res.sendFile(__dirname + '/public/index.html');
+// app.get('/', (req, res) => {
+//     res.sendFile(INDEX, { root: __dirname });
 //   });
 
-// server.listen(PORT, () => console.log(`Listening on ${PORT}`));
+// server.listen(PORT, () => {
+//     console.log(`Listening on ${ PORT }`);
+//   });
 
-//////////////////
+// const io = new Server(server);
+
+///////////////////////////////////
+
+'use strict';
+
+const express = require('express');
+const socketIO = require('socket.io');
+const path = require('path');
+
+const PORT = process.env.PORT || 3000;
+const INDEX = path.join(__dirname, 'index.html');
+
+const server = express()
+  .use(express.static(__dirname + '/public'))
+  .listen(PORT, () => console.log(`Listening on ${ PORT }`));
+
+const io = socketIO(server);
 
 io.on('connection', (socket) => 
 {
@@ -59,7 +55,7 @@ io.on('connection', (socket) =>
 	function accelerometerMsg(data) 
 	{
 		socket.broadcast.emit('accelerometer', data);
-		console.log(data);
+		//console.log(data);
 	}
 	function mouseMsg(data) 
 	{
