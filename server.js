@@ -3,18 +3,30 @@
 
 'use strict';
 
+var fs = require('fs');
+var https = require('https');
+
 const express = require('express');
-const socketIO = require('socket.io');
-const path = require('path');
+var app = express();
+
+const options = {
+    key: fs.readFileSync('key.pem'),
+    cert: fs.readFileSync('cert.pem')
+  };
 
 const PORT = process.env.PORT || 3000;
-const INDEX = path.join(__dirname, 'index.html');
+const INDEX = '/index.html';
 
-const server = express()
-  .use(express.static(__dirname + '/public'))
-  .listen(PORT, () => console.log(`Listening on ${ PORT }`));
+var server = https.createServer(options, app);
+var io = require('socket.io')(server);
 
-const io = socketIO(server);
+app.get('/', function(req, res) {
+    res.sendFile(__dirname + '/public/index.html');
+  });
+
+server.listen(PORT, () => console.log(`Listening on ${PORT}`));
+
+//////////////////
 
 io.on('connection', (socket) => 
 {
@@ -29,7 +41,7 @@ io.on('connection', (socket) =>
 	function mouseMsg(data) 
 	{
 		socket.broadcast.emit('mouse', data);
-		console.log(data);
+		// console.log(data);
 	}
   socket.on('disconnect', () => console.log('Client disconnected'));
 });

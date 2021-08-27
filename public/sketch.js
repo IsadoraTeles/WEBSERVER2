@@ -1,4 +1,5 @@
 var socket = io();
+
 var isMobile = navigator.userAgent.match(/(iPhone|iPod|iPad|Android|BlackBerry)/) || false;
 var renderer;
 
@@ -119,7 +120,7 @@ function emmitAccelerometer (INx, INy, INz)
 	}
 
 	socket.emit('accelerometer', data);
-  console.log('sendingAccelerometer:', INx +',', INy + ',', INz);
+  // console.log('sendingAccelerometer:', INx +',', INy + ',', INz);
 }
 
 function mousePressed()
@@ -149,14 +150,14 @@ function emmitMouse(INx, INy)
 
 function ReceivingNewDrawingAcc(data)
 {
-	console.log('receivingAcc :', data.x +', ', data.y + ', ', data.z);
+	// console.log('receivingAcc :', data.x +', ', data.y + ', ', data.z);
 	fill(0, 0, 255); // blue drawing received Acc ellipse
 	ellipse(data.x, data.y, 40);
 }
 
 function ReceivingNewDrawingMouse(data)
 {
-	console.log('receivingMouse :', data.x +', ', data.y);
+	// console.log('receivingMouse :', data.x +', ', data.y);
 	fill(0, 255, 255); // cyan drawing received Mouse ellipse
 	ellipse(data.x, data.y, 40);
 }
