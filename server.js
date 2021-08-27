@@ -16,7 +16,7 @@ var server = https.createServer({
     cert: fs.readFileSync('cert.pem') 
  },app);
 
-server.use((req, res) => res.sendFile(INDEX, { root: __dirname }));
+server.get((req, res) => res.sendFile(INDEX, { root: __dirname }));
 server.listen(PORT, () => console.log(`Listening on ${PORT}`));
 
 var io = require('socket.io').listen(server);
