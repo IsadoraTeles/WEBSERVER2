@@ -50,18 +50,15 @@ const io = socketIO(server);
 io.on('connection', (socket) => 
 {
 	console.log('new connection from:',	socket.id);
-	socket.on('accelerometer', accelerometerMsg);
-	socket.on('mouse', mouseMsg);
-	function accelerometerMsg(data) 
-	{
-		socket.broadcast.emit('accelerometer', data);
-		//console.log(data);
-	}
-	function mouseMsg(data) 
-	{
-		socket.broadcast.emit('mouse', data);
-		// console.log(data);
-	}
+
+	socket.on('accelerometer', (data) => {
+        socket.broadcast.emit('accelerometer', data);
+    });
+
+	socket.on('mouse', (data) => {
+        socket.broadcast.emit('mouse', data);
+    });
+	
   socket.on('disconnect', () => console.log('Client disconnected'));
 });
 
