@@ -1,65 +1,61 @@
-// 'use strict';
-
-// const express = require('express');
-// const http = require('http');
-// var https = require('https');
-// var fs = require( 'fs' );
-// const path = require('path');
-// const { Server } = require("socket.io");
-
-// const PORT = process.env.PORT || 3000;
-// const INDEX = '/index.html';
-
-// const options = {
-//     key: fs.readFileSync('key.pem'),
-//     cert: fs.readFileSync('cert.pem')
-//   };
-
-// const app = express();
-// const server = https.createServer(options, app);
-
-// app.use(express.static(__dirname + '/public'));
-
-// app.get('/', (req, res) => {
-//     res.sendFile(INDEX, { root: __dirname });
-//   });
-
-// server.listen(PORT, () => {
-//     console.log(`Listening on ${ PORT }`);
-//   });
-
-// const io = new Server(server);
-
-///////////////////////////////////
-
-'use strict';
-
-const express = require('express');
-const socketIO = require('socket.io');
-const path = require('path');
 
 const PORT = process.env.PORT || 3000;
-const INDEX = path.join(__dirname, 'index.html');
+const INDEX = '/index.html';
 
-const server = express()
-  .use(express.static(__dirname + '/public'))
-  .listen(PORT, () => console.log(`Listening on ${ PORT }`));
+var express = require('express');
+var http = require('http');
+var url = require('url');
+var path = require('path');
+var webSocket = require('ws');
 
-const io = socketIO(server);
+var app = express();
+var server = http.createServer(app);
+var wss = new webSocket.Server({ server:server });
 
-io.on('connection', (socket) => 
-{
-	console.log('new connection from:',	socket.id);
+// client connections
+var connects = []
 
-	socket.on('accelerometer', (data) => {
-        socket.broadcast.emit('accelerometer', data);
-    });
+app.use((req, res) => res.sendFile(INDEX, { root: __dirname }));
 
-	socket.on('mouse', (data) => {
-        socket.broadcast.emit('mouse', data);
-    });
-	
-  socket.on('disconnect', () => console.log('Client disconnected'));
+// Called when success building connection
+wss.on('connection', function (ws, req) {
+  var location = url.parse(req.url, true);
+
+  var initMessage = {message:"connection"};
+  ws.send(JSON.stringify(initMessage));
+  connects.push(ws);
+  console.log("New Client Connected : " + connects.length);
+
+  // Callback from client message
+  ws.on('message', function (msg) {
+    var parsedMsg = JSON.parse(msg);
+    console.log('received raw: %s', msg);
+    console.log('received parsed: ', parsedMsg);
+    console.log('sending : ', parsedMsg);
+    var myIndex = connects.indexOf(ws);
+    broadcast(parsedMsg, myIndex);  // Return to client
 });
 
-setInterval(() => io.emit('time', new Date().toTimeString()), 1000);
+  ws.on('close', function () {
+      console.log('A Client Leave');
+      connects = connects.filter(function (conn, i) {
+          return (conn === ws) ? false : true;
+      });
+  });
+
+});
+
+server.listen(PORT, () => console.log(`Listening on ${PORT}`));
+
+// Implement broadcast function because of ws doesn't have it
+function broadcast (message, index) {
+  connects.forEach(function (socket, i) {
+      console.log('braodcasting : ', JSON.stringify(message));
+      if (i != index)
+      {
+        socket.send(JSON.stringify(message));
+      }
+  });
+}
+
+
